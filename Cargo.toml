@@ -5,6 +5,7 @@ authors = ["Ari Seyhun <ariseyhun@live.com.au>"]
 edition = "2021"
 description = "Utilities for working with tasks in Lunatic"
 repository = "https://github.com/tqwewe/lunatic_tasks"
+license = "MIT OR Apache-2.0"
 keywords = ["lunatic", "tasks", "ordered", "unordered", "buffered"]
 categories = ["wasm"]
 
