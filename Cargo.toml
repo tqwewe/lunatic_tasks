@@ -1,8 +1,13 @@
 [package]
 name = "lunatic_tasks"
 version = "0.1.0"
+authors = ["Ari Seyhun <ariseyhun@live.com.au>"]
 edition = "2021"
+description = "Utilities for working with tasks in Lunatic"
+repository = "https://github.com/tqwewe/lunatic_tasks"
+keywords = ["lunatic", "tasks", "ordered", "unordered", "buffered"]
+categories = ["wasm"]
 
 [dependencies]
 lunatic = "0.11"
-serde = { version = "1.0.147" }
+serde = { version = "1.0" }
