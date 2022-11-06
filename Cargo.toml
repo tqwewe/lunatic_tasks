@@ -1,0 +1,8 @@
+[package]
+name = "lunatic-tasks"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+lunatic = "0.11"
+serde = { version = "1.0.147" }
