@@ -44,14 +44,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "lunatic-tasks"
-version = "0.1.0"
-dependencies = [
- "lunatic",
- "serde",
-]
-
-[[package]]
 name = "lunatic-test"
 version = "0.10.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -59,6 +51,14 @@ checksum = "d1ed5beab4ac9e9b0ba97b7139de06ca173bb21718141152c0133b46d4100665"
 dependencies = [
  "quote",
  "syn",
+]
+
+[[package]]
+name = "lunatic_tasks"
+version = "0.1.0"
+dependencies = [
+ "lunatic",
+ "serde",
 ]
 
 [[package]]
