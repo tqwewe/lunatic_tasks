@@ -5,7 +5,7 @@ use lunatic_tasks::TaskExt;
 fn main() {
     let tasks = [5, 5, 2, 2, 3, 3, 4, 4, 5, 5]
         .into_iter()
-        .tasks_ordered(3, |num| {
+        .tasks_unordered(3, |num| {
             lunatic::sleep(Duration::from_millis(num as u64 * 200));
             println!("{num}");
             num
