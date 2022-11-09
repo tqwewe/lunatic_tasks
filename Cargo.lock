@@ -18,24 +18,27 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "fb4a24b1aaf0fd0ce8b45161144d6f42cd91677fd5940fd431183eb023b3a2b8"
 
 [[package]]
-name = "lunatic"
-version = "0.11.4"
+name = "itoa"
+version = "1.0.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "946d5710624fc8007c58d16c31da9a5db80169e180b20a3901a2af4dd71884a7"
+checksum = "4217ad341ebadf8d8e724e264f13e593e0648f5b3e94b3896a5df283be015ecc"
+
+[[package]]
+name = "lunatic"
+version = "0.11.3"
 dependencies = [
  "bincode",
  "lunatic-macros",
  "lunatic-test",
  "paste",
  "serde",
+ "serde_json",
  "thiserror",
 ]
 
 [[package]]
 name = "lunatic-macros"
-version = "0.11.4"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "32f9b31b098de4c99a9f85d30735367d05d5ce0f84cb796f6a5792b4bb8b3a09"
+version = "0.11.0"
 dependencies = [
  "convert_case",
  "proc-macro2",
@@ -46,8 +49,6 @@ dependencies = [
 [[package]]
 name = "lunatic-test"
 version = "0.10.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "d1ed5beab4ac9e9b0ba97b7139de06ca173bb21718141152c0133b46d4100665"
 dependencies = [
  "quote",
  "syn",
@@ -86,6 +87,12 @@ dependencies = [
 ]
 
 [[package]]
+name = "ryu"
+version = "1.0.11"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "4501abdff3ae82a1c1b477a17252eb69cee9e66eb915c1abaa4f44d873df9f09"
+
+[[package]]
 name = "serde"
 version = "1.0.147"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -103,6 +110,17 @@ dependencies = [
  "proc-macro2",
  "quote",
  "syn",
+]
+
+[[package]]
+name = "serde_json"
+version = "1.0.87"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "6ce777b7b150d76b9cf60d28b55f5847135a003f7d7350c6be7a773508ce7d45"
+dependencies = [
+ "itoa",
+ "ryu",
+ "serde",
 ]
 
 [[package]]

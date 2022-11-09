@@ -20,17 +20,19 @@
 mod ordered;
 mod unordered;
 
-use lunatic::serializer::Bincode;
+use lunatic::{
+    function::FuncRef,
+    protocol::ProtocolCapture,
+    serializer::{Bincode, Serializer},
+    Process, Tag,
+};
 
-pub use ordered::TasksOrdered;
-pub use unordered::TasksUnordered;
+pub use ordered::{SerializedTasksOrdered, TasksOrdered};
+use serde::{Deserialize, Serialize};
+pub use unordered::{SerializedTasksUnordered, TasksUnordered};
 
 /// An extension trait for iterators that provide helpful methods for working with tasks in Lunatic.
-pub trait TaskExt<C, M>
-where
-    Self: Iterator<Item = C> + Sized,
-    M: 'static,
-{
+pub trait TaskExt<C, M> {
     /// Execute tasks buffered, with results returned in order.
     ///
     /// # Example
@@ -43,7 +45,12 @@ where
     ///     n
     /// })
     /// ```
-    fn tasks_ordered(self, n: usize, f: fn(C) -> M) -> TasksOrdered<Self, C, M, Bincode> {
+    fn tasks_ordered(self, n: usize, f: fn(C) -> M) -> TasksOrdered<Self, C, M, Bincode>
+    where
+        Self: Sized + Iterator<Item = C>,
+        C: Serialize + for<'de> Deserialize<'de>,
+        M: Serialize + for<'de> Deserialize<'de>,
+    {
         self.tasks_ordered_with_serializer(n, f)
     }
 
@@ -54,7 +61,13 @@ where
         self,
         n: usize,
         f: fn(C) -> M,
-    ) -> TasksOrdered<Self, C, M, S>;
+    ) -> TasksOrdered<Self, C, M, S>
+    where
+        Self: Sized + Iterator<Item = C>,
+        S: Serializer<()>
+            + Serializer<M>
+            + Serializer<(Process<M, S>, Tag, C, FuncRef<fn(C) -> M>)>
+            + Serializer<ProtocolCapture<(Process<M, S>, Tag, C, FuncRef<fn(C) -> M>)>>;
 
     /// Execute tasks buffered, with results returned in any order as soon as results are available.
     ///
@@ -74,7 +87,12 @@ where
     /// assert_eq!(tasks.next(), Some(4));
     /// assert_eq!(tasks.next(), None);
     /// ```
-    fn tasks_unordered(self, n: usize, f: fn(C) -> M) -> TasksUnordered<Self, C, M, Bincode> {
+    fn tasks_unordered(self, n: usize, f: fn(C) -> M) -> TasksUnordered<Self, C, M, Bincode>
+    where
+        Self: Sized + Iterator<Item = C>,
+        C: Serialize + for<'de> Deserialize<'de>,
+        M: Serialize + for<'de> Deserialize<'de>,
+    {
         self.tasks_unordered_with_serializer(n, f)
     }
 
@@ -85,19 +103,30 @@ where
         self,
         n: usize,
         f: fn(C) -> M,
-    ) -> TasksUnordered<Self, C, M, S>;
+    ) -> TasksUnordered<Self, C, M, S>
+    where
+        Self: Sized + Iterator<Item = C>,
+        C: Serialize + for<'de> Deserialize<'de>,
+        M: Serialize + for<'de> Deserialize<'de>,
+        S: Serializer<()>
+            + Serializer<M>
+            + Serializer<(Process<(Tag, M), S>, Tag, C, FuncRef<fn(C) -> M>)>
+            + Serializer<ProtocolCapture<(Process<M, S>, Tag, C, FuncRef<fn(C) -> M>)>>;
 }
 
-impl<I, C, M> TaskExt<C, M> for I
-where
-    Self: Iterator<Item = C>,
-    M: 'static,
-{
+impl<I, C, M> TaskExt<C, M> for I {
     fn tasks_ordered_with_serializer<S>(
         self,
         n: usize,
         f: fn(C) -> M,
-    ) -> TasksOrdered<Self, C, M, S> {
+    ) -> TasksOrdered<Self, C, M, S>
+    where
+        Self: Sized + Iterator<Item = C>,
+        S: Serializer<()>
+            + Serializer<M>
+            + Serializer<(Process<M, S>, Tag, C, FuncRef<fn(C) -> M>)>
+            + Serializer<ProtocolCapture<(Process<M, S>, Tag, C, FuncRef<fn(C) -> M>)>>,
+    {
         TasksOrdered::new(self, n, f)
     }
 
@@ -105,7 +134,16 @@ where
         self,
         n: usize,
         f: fn(C) -> M,
-    ) -> TasksUnordered<Self, C, M, S> {
+    ) -> TasksUnordered<Self, C, M, S>
+    where
+        Self: Sized + Iterator<Item = C>,
+        C: Serialize + for<'de> Deserialize<'de>,
+        M: Serialize + for<'de> Deserialize<'de>,
+        S: Serializer<()>
+            + Serializer<M>
+            + Serializer<(Process<(Tag, M), S>, Tag, C, FuncRef<fn(C) -> M>)>
+            + Serializer<ProtocolCapture<(Process<M, S>, Tag, C, FuncRef<fn(C) -> M>)>>,
+    {
         TasksUnordered::new(self, n, f)
     }
 }
